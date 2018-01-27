@@ -1,0 +1,4 @@
+---
+# tasks file for spec2006/
+- include: install.yml
+  tags: [packages]

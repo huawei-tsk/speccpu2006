@@ -1,0 +1,60 @@
+---
+- name: create nginx directory
+  file: path=/usr/local/benchmark/speccpu2006 state=directory mode=0755
+
+- name: Install deps packages via yum
+  yum: name={{ item }} state=present
+  when: ansible_os_family == 'RedHat'
+  with_items:
+  - automake
+  - numactl
+  - gcc
+  - gcc-c++
+  - gcc-gfortran
+  - libgfortran
+
+
+- name: Install deps packages via apt
+  yum: name={{ item }} state=present
+  when: ansible_os_family == 'Debian'
+  with_items:
+  - automake
+  - numactl
+  - gcc*
+  - libgfortran-5-dev
+
+- name: copy scripts to targetpath
+  copy: src=scripts dest=/usr/local/benchmark/speccpu2006 mode=0755
+
+#- name: build speccpu2006 and install -1-
+#  command: export FORCE_UNSAFE_CONFIGURE=1
+#  args:
+#    #chdir: /usr/local/benchmark/nginx
+# below used to test
+##################################################################
+- name: build speccpu2006 and install x86-2650v4
+  shell: ./speccpu2006-test-2650v4.sh 
+  args:
+    chdir: /usr/local/benchmark/nginx
+  when: ansible_machine == "x86_64" and ansible_processor.stdout.find('2650') != -1 
+
+- name: build speccpu2006 and install x86-2695
+  shell: speccpu2006-test-2695v4.sh
+  args:
+    chdir: /usr/local/benchmark/nginx
+  when: ansible_machine == "x86_64" and ansible_processor.stdout.find('2695') != -1
+
+- name: build speccpu2006 and install -3-
+  command: echo y | ./buildtools
+  args:
+    chdir: usr/local/benchmark/speccpu2006/tools/src
+  when: ansible_machine == "aarch64"
+
+
+
+
+
+
+
+
+
