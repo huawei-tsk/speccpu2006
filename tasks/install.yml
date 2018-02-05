@@ -1,8 +1,11 @@
 ---
+#Top of SPEC benchmark tree is '/usr/local/benchmark/speccpu2006/speccpu2006'
+#Tools built successfully.  Go to the top of the tree and
+#source the shrc file.  Then you should be ready.
+
 - name: create speccpu2006 directory
   file: path=/usr/local/benchmark/speccpu2006/{{ item }} state=directory mode=0755
   with_items:
-  - build
   - install 
 
 - name: Install deps packages via yum
@@ -18,58 +21,46 @@
 
 
 - name: Install deps packages via apt
-  yum: name={{ item }} state=present
+  apt: name={{ item }} state=present
   when: ansible_os_family == 'Debian'
   with_items:
   - automake
   - numactl
-  - gcc*
+  - gcc
+  - g++
   - libgfortran-5-dev
 
 - name: copy scripts to targetpath
   copy: src=scripts dest=/usr/local/benchmark/speccpu2006 mode=0755
 
+
+- name: downlaod SPECJVM2008 to dest
+  get_url:
+    url: ftp://ftp:123456@192.168.1.116/speccpu2006.tar.gz
+    dest: /usr/local/benchmark/speccpu2006
+    mode: 0755
+  tags: spec1
 #temporary schedule
 # replace of ftp server on the future
 - name: Decompress speccpu2006 tarball
   unarchive:
-    src: speccpu2006.tar.gz
-    dest: /usr/local/benchmark/speccpu2006/build
+    src: /usr/local/benchmark/speccpu2006/speccpu2006.tar.gz
+    dest: /usr/local/benchmark/speccpu2006/
     copy: yes
+    list_files: yes
+  tags: spec2
 
-#- name: build speccpu2006 and install
-#  shell: sh scripts/speccpu2006-build.sh
-#  args:
-#    chdir: /usr/local/benchmark/speccpu2006
+- name: Configure speccpu2006 envriment
+  lineinfile: dest=/etc/profile line='export FORCE_UNSAFE_CONFIGURE=1' insertafter='EOF'
+  command: source /etc/profile
+  tags: spec3
 
-#  command: export FORCE_UNSAFE_CONFIGURE=1
-#  args:
-#    #chdir: /usr/local/benchmark/nginx
-# below used to test
-##################################################################
-#- name: build speccpu2006 and install x86-2650v4
-#  shell: ./speccpu2006-test-2650v4.sh 
-#  args:
-#    chdir: /usr/local/benchmark/nginx
-#  when: ansible_machine == "x86_64" and ansible_processor.stdout.find('2650') != -1 
-#
-#- name: build speccpu2006 and install x86-2695
-#  shell: speccpu2006-test-2695v4.sh
-#  args:
-#    chdir: /usr/local/benchmark/nginx
-#  when: ansible_machine == "x86_64" and ansible_processor.stdout.find('2695') != -1
-#
-#- name: build speccpu2006 and install -3-
-#  command: echo y | ./buildtools
-#  args:
-#    chdir: usr/local/benchmark/speccpu2006/tools/src
-#  when: ansible_machine == "aarch64"
-
-
-
-
-
-
+- name: build speccpu2006 
+  #copy: src=scripts/buildtools dest=/usr/local/benchmark/speccpu2006/speccpu2006/tools/src mode=0755
+  shell: echo y | ./buildtools 
+  args:
+    chdir: /usr/local/benchmark/speccpu2006/build/tools/src
+  #when: ansible_distribution == "Ubuntu"
 
 
 

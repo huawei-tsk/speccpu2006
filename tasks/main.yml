@@ -1,4 +1,9 @@
 ---
 # tasks file for spec2006/
+#
+#Top of SPEC benchmark tree is '/usr/local/benchmark/speccpu2006/speccpu2006'
+#Tools built successfully.  Go to the top of the tree and
+#source the shrc file.  Then you should be ready.
+
 - include: install.yml
   tags: [packages]
