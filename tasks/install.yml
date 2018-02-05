@@ -4,9 +4,7 @@
 #source the shrc file.  Then you should be ready.
 
 - name: create speccpu2006 directory
-  file: path=/usr/local/benchmark/speccpu2006/{{ item }} state=directory mode=0755
-  with_items:
-  - install 
+  file: path=/usr/local/benchmark/speccpu2006 state=directory mode=0755
 
 - name: Install deps packages via yum
   yum: name={{ item }} state=present
@@ -18,7 +16,11 @@
   - gcc-c++
   - gcc-gfortran
   - libgfortran
-
+  - libgcc
+  - glibc
+  - glibc-devel
+  - libstdc++
+  - libstdc++devel
 
 - name: Install deps packages via apt
   apt: name={{ item }} state=present
@@ -52,15 +54,16 @@
 
 - name: Configure speccpu2006 envriment
   lineinfile: dest=/etc/profile line='export FORCE_UNSAFE_CONFIGURE=1' insertafter='EOF'
-  command: source /etc/profile
+  #command: source /etc/profile
   tags: spec3
 
 - name: build speccpu2006 
   #copy: src=scripts/buildtools dest=/usr/local/benchmark/speccpu2006/speccpu2006/tools/src mode=0755
-  shell: echo y | ./buildtools 
+  shell: source /etc/profile && echo y | ./buildtools 
   args:
-    chdir: /usr/local/benchmark/speccpu2006/build/tools/src
-  #when: ansible_distribution == "Ubuntu"
+    chdir: /usr/local/benchmark/speccpu2006/speccpu2006/tools/src
 
+  #when: ansible_distribution == "Ubuntu"
+  tags: spec4
 
 
