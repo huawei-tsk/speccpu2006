@@ -1,0 +1,8 @@
+- hosts: localhost
+  tasks:
+    - name: copy speccpu2006 test script
+      copy: src=../files/scripts/speccpu2006-test.sh dest=/usr/local/benchmark/speccpu2006/speccpu2006 mode=0755
+
+    - name: run speccpu2006 rate test
+      shell: ./speccpu2006-test.sh >> speccpu2006.log
+    

@@ -20,7 +20,7 @@
   - glibc
   - glibc-devel
   - libstdc++
-  - libstdc++devel
+  - libstdc++-devel
 
 - name: Install deps packages via apt
   apt: name={{ item }} state=present
@@ -38,7 +38,7 @@
 
 - name: downlaod SPECJVM2008 to dest
   get_url:
-    url: ftp://ftp:123456@192.168.1.116/speccpu2006.tar.gz
+    url: ftp://ftp:123456@htsat.vicp.cc/speccpu2006.tar.gz
     dest: /usr/local/benchmark/speccpu2006
     mode: 0755
   tags: spec1
