@@ -1,2 +1,7 @@
 ---
 # defaults file for spec2006/
+speccpu2006_locate: /usr/local/benchmark/
+
+speccpu2006_home: /usr/local/benchmark/speccpu2006
+
+speccpu2006_version: 1.2

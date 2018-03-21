@@ -5,5 +5,21 @@
 #Tools built successfully.  Go to the top of the tree and
 #source the shrc file.  Then you should be ready.
 
+#- name: Create a register to represent the status if the speccpu2006.tar.gz is exits
+  #shell: ls speccpu2006.tar.gz 
+  #command: ls speccpu2006.tar.gz 
+  #ignore_errors: True
+  #register: result
+
+
+- name: create speccpu2006 directory
+  file: path={{ speccpu2006_locate }} state=directory mode=0755
+
+- name: copy speccpu2006 to special path
+  copy: src=speccpu2006.tar.gz dest={{ speccpu2006_locate }}
+  ignore_errors: True
+  register: result
+
 - include: install.yml
+  #when: result | succeeded
   tags: [packages]

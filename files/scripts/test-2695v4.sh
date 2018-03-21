@@ -3,9 +3,9 @@
 TEST_SPECINT=no
 TEST_SPECFP=yes
 
-SPEC_DIR=speccpu2006
-cd $SPEC_DIR
-
+#SPEC_DIR=speccpu2006
+#cd $SPEC_DIR
+cd ../
 . ./shrc
 
 if [ "$TEST_SPECINT" = "yes" ]; then
