@@ -57,12 +57,16 @@
 - name: copy config to targetpath
   copy: src=config dest={{ speccpu2006_home }} mode=0755
 
-- name: build speccpu2006 
+- name: build speccpu2006  -1-
   #copy: src=scripts/buildtools dest=/usr/local/benchmark/speccpu2006/speccpu2006/tools/src mode=0755
-  shell: source ~/.bashrc && echo y | ./buildtools 
+  shell: source ~/.bashrc 
+  tags: spec5
+
+- name: build speccpu2006 -2-
+  #copy: src=scripts/buildtools dest=/usr/local/benchmark/speccpu2006/speccpu2006/tools/src mode=0755
+  #command: ./buildtools 
+  shell: ./buildtools 
   args:
     chdir: /usr/local/benchmark/speccpu2006/tools/src
-  tags: spec4
-
-
-
+    #executable: /bin/bash
+  tags: spec5
