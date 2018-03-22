@@ -20,12 +20,12 @@
       when: x86_2650.stdout.find('E5-2650') != -1
 
 
-     - name: execute speccpu2006 test according to server type    
-       shell: ./test-Hi1616.sh
-       args:
-         chdir: /usr/local/benchmark/speccpu2006/scripts 
-       register: logdata
-       when: x86_2650.stdout.find('Hi1616') != -1
+    - name: execute speccpu2006 test according to server type    
+      shell: ./test-Hi1616.sh
+      args:
+        chdir: /usr/local/benchmark/speccpu2006/scripts 
+      register: logdata
+      when: x86_2650.stdout.find('Hi1616') != -1
 
 
     - lineinfile: create=yes  dest=/tmp/speccpu2006_output.log line="{{ logdata.stdout }}" state=present mode=0755
