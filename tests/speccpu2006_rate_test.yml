@@ -12,6 +12,11 @@
       shell: dmidecode -t processor | grep -o Hi1616 | uniq
       register: arch64_1616    
 
+    - name: remove latest data
+      file:
+        path: /tmp/speccpu2006_output.log
+        state: absent
+
     - name: execute speccpu2006 test according to server type 
       shell: ./test-2650v4.sh
       args:
