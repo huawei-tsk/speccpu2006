@@ -2,36 +2,45 @@
   tasks:
     - name: get 2650v4 server type
       shell: dmidecode -t processor | grep -o E5-2650 | uniq
-      register: x86_2650    
+      register: x86_2650
 
-    - name: get 2650v4 server type
+    - name: get 2640v4 server type
+      shell: dmidecode -t processor | grep -o E5-2640 | uniq
+      register: x86_2640
+
+    - name: get 2695v4 server type
       shell: dmidecode -t processor | grep -o E5-2695 | uniq
-      register: x86_2695    
+      register: x86_2695
 
-    - name: get 2650v4 server type
+    - name: get TS2280 server type
       shell: dmidecode -t processor | grep -o Hi1616 | uniq
-      register: arch64_1616    
+      register: arch64_1616
 
     - name: remove latest data
       file:
         path: /tmp/speccpu2006_output.log
         state: absent
 
-    - name: execute speccpu2006 test according to server type 
+    - name: execute speccpu2006 test according to server type
       shell: ./test-2650v4.sh
       args:
-        chdir: /usr/local/benchmark/speccpu2006/scripts 
+        chdir: /usr/local/benchmark/speccpu2006/scripts
       register: logdata
       when: x86_2650.stdout.find('E5-2650') != -1
 
+    - name: execute speccpu2006 test according to server type
+      shell: ./test-2640v4.sh
+      args:
+        chdir: /usr/local/benchmark/speccpu2006/scripts
+      register: logdata
+      when: x86_2640.stdout.find('E5-2640') != -1
 
-    - name: execute speccpu2006 test according to server type    
+    - name: execute speccpu2006 test according to server type
       shell: ./test-Hi1616.sh
       args:
-        chdir: /usr/local/benchmark/speccpu2006/scripts 
+        chdir: /usr/local/benchmark/speccpu2006/scripts
       register: logdata
-      when: x86_2650.stdout.find('Hi1616') != -1
-
+      when: arch64_1616.stdout.find('Hi1616') != -1
 
     - lineinfile: create=yes  dest=/tmp/speccpu2006_output.log line="{{ logdata.stdout }}" state=present mode=0755
 
@@ -41,7 +50,4 @@
         src: /tmp/speccpu2006_output.log
         dest: /tmp/speccpu2006_output.log
         flat: yes
-
-
-
 
