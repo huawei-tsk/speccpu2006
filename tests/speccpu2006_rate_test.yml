@@ -13,8 +13,12 @@
       register: x86_2695
 
     - name: get TS2280 server type
-      shell: dmidecode -t processor | grep -o Hi1616 | uniq
+      shell: dmidecode -t processor | grep -o 1616 | uniq
       register: arch64_1616
+
+    - name: get D06 server type
+      shell: dmidecode -t processor | grep -o 1620 | uniq
+      register: arch64_1620
 
     - name: remove latest data
       file:
@@ -41,6 +45,13 @@
         chdir: /usr/local/benchmark/speccpu2006/scripts
       register: logdata
       when: arch64_1616.stdout.find('Hi1616') != -1
+
+    - name: execute speccpu2006 test according to server type
+      shell: ./test-Hi1620.sh
+      args:
+        chdir: /usr/local/benchmark/speccpu2006/scripts
+      register: logdata
+      when: arch64_1620.stdout.find('1620') != -1
 
     - lineinfile: create=yes  dest=/tmp/speccpu2006_output.log line="{{ logdata.stdout }}" state=present mode=0755
 

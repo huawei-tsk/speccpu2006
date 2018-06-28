@@ -60,6 +60,10 @@
 - name: build speccpu2006  -1-
   #copy: src=scripts/buildtools dest=/usr/local/benchmark/speccpu2006/speccpu2006/tools/src mode=0755
   shell: source ~/.bashrc 
+  args:
+    executable: /bin/bash
+
+
   tags: spec5
 
 - name: build speccpu2006 -2-
